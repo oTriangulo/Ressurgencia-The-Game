@@ -19,6 +19,11 @@ public class Aiming : MonoBehaviour
     public float bulletForce = 60f;
     public float bulletDamage = 10f;
 
+    // bullet
+    public LineRenderer lr;
+
+    //-------------------------------------------------------------------------------
+
     private void Start() {
         FollowPlayer = GameObject.Find("Player").transform; // Finds the player and sets it as the follow player
     }
@@ -41,13 +46,15 @@ public class Aiming : MonoBehaviour
         } // Toggles aiming on and off
 
 
+
+
         if (Input.GetButtonDown("Fire1") && aiming){
-        Shoot();
+        StartCoroutine(Shoot()); // starts the coroutine to shoot the bullet
         } // Shoots the bullet when the button is pressed and the player is aiming
 
         transform.position = new Vector2(FollowPlayer.position.x + -0.2f, FollowPlayer.position.y + 0.8f); // Sets the position of the arm to follow the player
         mousepos = cam.ScreenToWorldPoint(Input.mousePosition); // Gets the position of the mouse on the screen and converts it to world coordinates
-    
+
     }
 
     private void FixedUpdate() {
@@ -58,9 +65,28 @@ public class Aiming : MonoBehaviour
         rb.rotation = angle;
         } // Rotates the arm to face the mouse when the player is aiming
     }
-    void Shoot(){ // Creates the bullet and adds force to it. Instiantiated from the firepoint as a prefab
-        RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, firePoint.right);
+    IEnumerator Shoot(){ // Creates a Raycast shooting from the firepoint position and firepoint up, then, if it hits an enemy, it starts the takedamage method from the enemy
+    // this is a coroutine, a method that runs over and over again in a time basis
+        RaycastHit2D hitInfo = Physics2D.Raycast(firePoint.position, firePoint.up);
 
+        if(hitInfo){
+            EnemyFuncs enemy = hitInfo.transform.GetComponent<EnemyFuncs>();
+            if (enemy != null){
+                enemy.TakeDamage(bulletDamage);
+            }
+
+            lr.SetPosition(0, firePoint.position); // Sets the line renderer to the firepoint
+            lr.SetPosition(1, hitInfo.point); // Sets the line renderer to the hit point
+        } else { // if it doesn't hit an enemy
+            lr.SetPosition(0, firePoint.position); // Sets the line renderer to the firepoint 
+            lr.SetPosition(1, firePoint.position + firePoint.up * 100f); // Sets the line renderer to the hit point with a distance of 100
+        }
+
+        lr.enabled = true; // Enables the line renderer
+
+        yield return new WaitForSeconds(0.2f); // Waits for 0.2 seconds
+
+        lr.enabled = false; // Disables the line renderer
+
+        }
     }
-
-}
