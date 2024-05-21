@@ -33,4 +33,6 @@ Algumas das coisas que quero treinar:
     • Documentos
     • Portas
     • munição
+    • Examinar Monstros e Inimigos
+    
 
