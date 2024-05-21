@@ -5,21 +5,21 @@ using UnityEngine;
 
 public class PlayerFuncs : MonoBehaviour
 {
-    public float HP = 16f;
+    // variables for health bar and mouse position
+    public float HP;
+    public float maxHP = 16f;
     public Camera cam;
     Vector2 mousepos;
-    GameObject Player;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        HP = maxHP;
     }
 
     // Update is called once per frame
     void Update()
     {
-
         if (HP <= 0){
             Death();
         }

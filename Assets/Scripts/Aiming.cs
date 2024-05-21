@@ -20,7 +20,7 @@ public class Aiming : MonoBehaviour
     public float bulletDamage = 10f;
 
     // bullet
-    public LineRenderer lr;
+    public LineRenderer lr; // Line renderer called lr
 
     //-------------------------------------------------------------------------------
 
